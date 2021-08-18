@@ -100,7 +100,7 @@ SystemStub *SystemStub_SDL_create() {
 }
 
 void SystemStub_SDL::init(const char *title, int w, int h, bool fullscreen, int widescreenMode, const ScalerParameters *scalerParameters) {
-	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK);
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER);
 	SDL_ShowCursor(SDL_DISABLE);
 	_caption = title;
 	memset(&_pi, 0, sizeof(_pi));
@@ -657,20 +657,18 @@ void SystemStub_SDL::processEvent(const SDL_Event &ev, bool &paused) {
 		if (_joystick) {
 			const bool pressed = (ev.jbutton.state == SDL_PRESSED);
 			switch (ev.jbutton.button) {
-			case 0:
+			case 30:
 				_pi.space = pressed;
 				break;
-			case 1:
-				_pi.shift = pressed;
-				break;
-			case 2:
+			case 31:
 				_pi.enter = pressed;
 				break;
-			case 3:
+			case 32:
 				_pi.backspace = pressed;
 				break;
-			case 9:
-				_pi.escape = pressed;
+			case 33:
+				_pi.shift = pressed;
+				break;
 			}
 		}
 		break;
@@ -718,12 +716,20 @@ void SystemStub_SDL::processEvent(const SDL_Event &ev, bool &paused) {
 				_pi.space = pressed;
 				break;
 			case SDL_CONTROLLER_BUTTON_X:
-				_pi.shift = pressed;
-				break;
-			case SDL_CONTROLLER_BUTTON_Y:
 				_pi.backspace = pressed;
 				break;
-			case SDL_CONTROLLER_BUTTON_BACK:
+			case SDL_CONTROLLER_BUTTON_Y:
+				_pi.shift = pressed;
+				break;
+			case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
+				_pi.load = pressed;
+				break;
+			case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
+				_pi.save = pressed;
+				break; 
+			case SDL_CONTROLLER_BUTTON_GUIDE:
+				_pi.quit = pressed;
+				break;
 			case SDL_CONTROLLER_BUTTON_START:
 				_pi.escape = pressed;
 				break;
